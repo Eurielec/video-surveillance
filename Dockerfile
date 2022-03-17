@@ -7,8 +7,7 @@ RUN mkdir /data
 WORKDIR /app
 
 # Requirements for opencv
-RUN apt-get update
-RUN apt-get install ffmpeg libsm6 libxext6  -y
+RUN apt-get update && apt-get install libgl1
 
 # Install the requirements for the Python app
 COPY requirements.txt ./
