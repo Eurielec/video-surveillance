@@ -6,9 +6,6 @@ RUN mkdir /data
 # Set the working directory to container's root /
 WORKDIR /app
 
-# Requirements for opencv
-RUN apt-get update && apt-get install -y python3-opencv
-
 # Install the requirements for the Python app
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt

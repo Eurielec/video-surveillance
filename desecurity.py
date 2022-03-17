@@ -36,7 +36,7 @@ class YiCam:
         Save an image from the rtsp to the corresponding folder
         """
         frame = self.stream.read()
-        cv2.imshow("Test", frame)
+        # cv2.imshow("Test", frame)
         return frame
 
     def save_image(self, frame, filepath):
