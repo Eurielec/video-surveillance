@@ -11,7 +11,7 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Install opencv
-RUN apt-get update && apt-get install -y opencv-python
+RUN apt-get update && apt-get install -y python3-opencv
 
 # Copy the program
 COPY desecurity.py ./
