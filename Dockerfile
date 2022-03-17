@@ -1,5 +1,5 @@
 # Start from the lightest image for Python3
-FROM python:3.9-alpine3.15
+FROM python:slim-bullseye
 
 RUN mkdir /data
 
@@ -8,8 +8,13 @@ WORKDIR /app
 
 # Install the requirements for the Python app
 COPY requirements.txt ./
-COPY desecurity.py ./
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Install opencv
+RUN apt-get update && apt-get install -y opencv-python
+
+# Copy the program
+COPY desecurity.py ./
 
 # SEE ENVIRONMENT VARIABLES IN docker-compose.yml
 
