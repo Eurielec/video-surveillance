@@ -7,7 +7,7 @@ RUN mkdir /data
 WORKDIR /app
 
 # Requirements for opencv
-RUN apt-get update && apt-get install libgl1
+RUN apt-get update && apt-get install -y python3-opencv
 
 # Install the requirements for the Python app
 COPY requirements.txt ./
