@@ -6,6 +6,10 @@ RUN mkdir /data
 # Set the working directory to container's root /
 WORKDIR /app
 
+# Requirements for opencv
+RUN apt-get update
+RUN apt-get install ffmpeg libsm6 libxext6  -y
+
 # Install the requirements for the Python app
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
