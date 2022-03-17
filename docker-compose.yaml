@@ -1,0 +1,16 @@
+version: "3.7"
+services:
+  desecurity:
+    container_name: desecurity
+    build: ./
+    image: local/desecurity:latest
+    restart: unless-stopped
+    volumes:
+      - $DATA_FOLDER:/data
+    environment:
+      - CAM_USER=$CAM_USER
+      - CAM_PASSWORD=$CAM_PASSWORD
+      - CAM_IP=$CAM_IP
+      - CAM_PORT=$CAM_PORT
+      - RETENTION_PERIOD=$RETENTION_PERIOD
+      - DATA_FOLDER=/data
