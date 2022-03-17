@@ -3,7 +3,6 @@ import shutil
 import logging
 import datetime
 from time import sleep
-from dotenv import load_dotenv
 import cv2
 from imutils.video import VideoStream
 
@@ -99,8 +98,6 @@ if __name__ == "__main__":
 
     # Configure logging
     logging.basicConfig(level=logging.INFO)
-
-    load_dotenv()
 
     # Configure the interval in seconds between images
     interval = int(os.environ.get("INTERVAL", 5))
