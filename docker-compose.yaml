@@ -7,8 +7,8 @@ services:
     restart: unless-stopped
     volumes:
       - $DATA_FOLDER:/data
-    # ports:
-    #   - 8001:8000
+    ports:
+      - 8001:8000
     environment:
       - TZ=Europe/Madrid
       - CAM_USER=$CAM_USER
@@ -23,6 +23,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.stream.entrypoints=websecure
       - traefik.http.routers.stream.rule=Host(`stream.$DOMAIN`)
+      - traefik.http.services.stream.loadbalancer.server.port=8001
       - traefik.http.routers.stream.tls=true
       - traefik.http.routers.stream.tls.certresolver=le
       - traefik.http.middlewares.stream.basicauth.users=$FILESERVER_USER:$FILESERVER_PASSWORD
