@@ -122,9 +122,9 @@ if __name__ == "__main__":
         file = f"{filepath}/{filename}.jpeg"
         logging.info(file)
         cam.save_image(img, file)
-        key = cv2.waitKey(1) & 0xFF
-        if key == ord('q'):
-            break
+        # key = cv2.waitKey(1) & 0xFF
+        # if key == ord('q'):
+        #     break
         sleep(interval)
 
     cam.stop()
