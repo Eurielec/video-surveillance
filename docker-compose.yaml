@@ -8,6 +8,7 @@ services:
     volumes:
       - $DATA_FOLDER:/data
     environment:
+      - TZ=Europe/Madrid
       - CAM_USER=$CAM_USER
       - CAM_PASSWORD=$CAM_PASSWORD
       - CAM_IP=$CAM_IP
