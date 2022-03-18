@@ -7,6 +7,8 @@ services:
     restart: unless-stopped
     volumes:
       - $DATA_FOLDER:/data
+    ports:
+      - 8000:8000
     environment:
       - TZ=Europe/Madrid
       - CAM_USER=$CAM_USER
@@ -15,6 +17,16 @@ services:
       - CAM_PORT=$CAM_PORT
       - RETENTION_PERIOD=$RETENTION_PERIOD
       - DATA_FOLDER=/data
+    networks:
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.stream.entrypoints=websecure
+      - traefik.http.routers.stream.rule=Host(`stream.$DOMAIN`)
+      - traefik.http.routers.stream.tls=true
+      - traefik.http.routers.stream.tls.certresolver=le
+      - traefik.http.middlewares.stream.basicauth.users=$FILESERVER_USER:$FILESERVER_PASSWORD
+
   security-fileserve:
     container_name: security-fileserve
     image: halverneus/static-file-server:v1.8.6
@@ -34,6 +46,10 @@ services:
       - traefik.http.routers.desecurity.rule=Host(`security.$DOMAIN`)
       - traefik.http.routers.desecurity.tls=true
       - traefik.http.routers.desecurity.tls.certresolver=le
+      - traefik.http.middlewares.desecurity.basicauth.users=$FILESERVER_USER:$FILESERVER_PASSWORD
+      - traefik.http.middlewares.desecurity.basicauth.removeheader=true
+      - traefik.http.routers.desecurity.middlewares=desecurity
+
 networks:
   traefik:
     name: traefik

@@ -5,6 +5,8 @@ import datetime
 from time import sleep
 import cv2
 from imutils.video import VideoStream
+from flask import Flask, render_template, Response
+from multiprocessing import Process
 
 
 class YiCam:
@@ -45,6 +47,14 @@ class YiCam:
 
     def stop(self):
         self.stream.stop()
+
+    def gen_frames(self):
+        while True:
+            frame = self.capture_image()
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
 def create_needed_folders(data_folder: str, retention_period: int):
@@ -108,23 +118,39 @@ if __name__ == "__main__":
     data_folder = os.environ.get('DATA_FOLDER', None)
     assert data_folder is not None
 
+    app = Flask(__name__)
+
     # Create camera instance
     cam = YiCam()
 
-    # Capture image every X seconds
-    while True:
+    @app.route('/')
+    def index():
+        return render_template('index.html')
 
-        img = cam.capture_image()
-        filepath = create_needed_folders(data_folder, retention_period)
-        if filepath is False:
-            continue
-        filename = datetime.datetime.now().strftime("%H:%M:%S")
-        file = f"{filepath}/{filename}.jpeg"
-        logging.info(file)
-        cam.save_image(img, file)
-        # key = cv2.waitKey(1) & 0xFF
-        # if key == ord('q'):
-        #     break
-        sleep(interval)
+    @app.route('/video_feed')
+    def video_feed():
+        return Response(cam.gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-    cam.stop()
+    def run():
+        # Capture image every X seconds
+        while True:
+
+            img = cam.capture_image()
+            filepath = create_needed_folders(data_folder, retention_period)
+            if filepath is False:
+                continue
+            filename = datetime.datetime.now().strftime("%H:%M:%S")
+            file = f"{filepath}/{filename}.jpeg"
+            logging.info(file)
+            cam.save_image(img, file)
+            # key = cv2.waitKey(1) & 0xFF
+            # if key == ord('q'):
+            #     break
+            sleep(interval)
+
+        cam.stop()
+
+    p = Process(target=run)
+    p.start()
+
+    app.run(port=8000, debug=True)
