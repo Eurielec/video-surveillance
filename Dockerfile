@@ -12,8 +12,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the program
 COPY desecurity.py ./
-# Copy the program
-COPY templates/ ./
+
+# Copy the templates folder to serve
+COPY templates .
 
 # SEE ENVIRONMENT VARIABLES IN docker-compose.yml
 
